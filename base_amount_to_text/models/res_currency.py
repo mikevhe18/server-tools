@@ -6,6 +6,58 @@ from openerp import fields, models, api, _
 from openerp.exceptions import except_orm
 from openerp.tools.safe_eval import safe_eval as eval
 
+PYTHON_IDR = """result=''
+if currency > 0:
+    ones = ["", "Satu ","Dua ","Tiga ","Empat ", "Lima ","Enam ","Tujuh ","Delapan ","Sembilan "]
+    tens = ["Sepuluh ","Sebelas ","Dua Belas ","Tiga Belas ", "Empat Belas ","Lima Belas ","Enam Belas ","Tujuh Belas ","Delapan Belas ","Sembilan Belas "]
+    twenties = ["","","Dua Puluh ","Tiga Puluh ","Empat Puluh ","Lima Puluh ","Enam Puluh ","Tujuh Puluh ","Delapan Puluh ","Sembilan Puluh "]
+    thousands = ["","Ribu ","Juta ", "Milyar "]
+
+    n3 = []
+    r1 = ""
+
+    ns = str(currency)
+
+    for k in range(3, 33, 3):
+        r = ns[-k:]
+        q = len(ns) - k
+        if q < -2:
+            break
+        else:
+            if q >= 0:
+                n3.append(int(r[:3]))
+            elif q >= -1:
+                n3.append(int(r[:2]))
+            elif q >= -2:
+                n3.append(int(r[:1]))
+        r1 = r
+
+    for i, x in enumerate(n3):
+        b1 = x % 10
+        b2 = (x % 100)//10
+        b3 = (x % 1000)//100
+        if x == 0:
+            continue
+        else:
+            t = thousands[i]
+        if b2 == 0:
+            if b1 == 1:
+                result = 'se' + t + result
+            else:
+                result = ones[b1] + t + result
+        elif b2 == 1:
+            result = tens[b1] + t + result
+        elif b2 > 1:
+            result = twenties[b2] + ones[b1] + t + result
+        if b3 > 0:
+            result = ones[b3] + "Ratus " + result
+    
+    result = result.replace("seJuta", "Satu Juta")
+    result = result.replace("seMilyar", "Satu Milyar")
+    result = result.replace("Satu ratus", "Seratus")
+    result = result.replace("ratus", "Ratus")
+"""
+
 class res_currency(models.Model):
     _inherit = 'res.currency'
 
@@ -23,21 +75,13 @@ class res_currency(models.Model):
         return val
 
     @api.multi
-    def amount_to_text_v2(self, currency):
-        val = {}
-        result=''
-
-        if self.python_amount2text:
-            try:
-                exec self.python_amount2text in val
-                result = val['funct_amount_to_text'](currency)
-            except:
-                raise except_orm(_('Error!'), _('Wrong python code defined.'))
-
-        return result
-
-    @api.multi
     def button_compute_python(self):
-        x =  self.amount_to_text(1000000)
+        x =  self.amount_to_text(1550850)
         raise except_orm(_('Compute Python'),
             _("Result: '%s'!") % (x,))
+
+    @api.model
+    def _install_python_IDR(self):
+        records = self.search([('name', '=', 'IDR')])
+        if records:
+            records.python_amount2text = PYTHON_IDR
