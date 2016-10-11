@@ -7,31 +7,19 @@
 			<field name="inherit_id" ref="base.view_currency_form"/>
 			<field name="arch" type="xml">
 				<data>
-                    <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}" position="replace">
-				        <notebook colspan="4">
-				            <page string="Rates">
-						        <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}">
-						            <tree string="Rates" editable="bottom">
-						                <field name="name"/>
-						                <field name="rate"/>
-						            </tree>
-						        </field>
-		                    </page>
-				            <page string="Amount To Text">
-                        		<separator string="Python Definition for Method Amount To Text" colspan="2"/>
-                        		<newline/>
-				                <field name="python_amount2text" nolabel="1"/>
-                                <div>
-                                    <button name="button_compute_python"
-                                        string="(Compute Python)"
-                                        type="object" help="Test Compute Python"/>
-                                </div>
-		                    </page>
-		                </notebook>
-					</field>
-				</data>
-
-			</field>
-		</record>
-	</data>
+					<xpath expr="//field[@name='rate_ids']" position="after">
+                        <group col="1" string="Legend (for variables, function)">
+                            <group>
+                                <label colspan="4" string="Value of amount to be converted to text: currency"/>
+                                <label colspan="4" string="Returned value: result"/>
+                                <label colspan="4" string="Function to call the method: &lt;model res_currency&gt;.amount_to_text(value)"/>
+                            </group>
+                        </group>
+                        <separator string="Python Definition for Method Amount To Text" colspan="2"/>
+						<field name="python_amount2text" nolabel="1"/>
+                    </xpath>>
+                </data>
+            </field>
+        </record>
+    </data>
 </openerp>

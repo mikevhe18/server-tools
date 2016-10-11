@@ -2,15 +2,25 @@
 # © 2016 OpenSynergy Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models, api, _
-from openerp.exceptions import except_orm
+from openerp import fields, models, api
 from openerp.tools.safe_eval import safe_eval as eval
 
 PYTHON_IDR = """result=''
 if currency > 0:
-    ones = ["", "Satu ","Dua ","Tiga ","Empat ", "Lima ","Enam ","Tujuh ","Delapan ","Sembilan "]
-    tens = ["Sepuluh ","Sebelas ","Dua Belas ","Tiga Belas ", "Empat Belas ","Lima Belas ","Enam Belas ","Tujuh Belas ","Delapan Belas ","Sembilan Belas "]
-    twenties = ["","","Dua Puluh ","Tiga Puluh ","Empat Puluh ","Lima Puluh ","Enam Puluh ","Tujuh Puluh ","Delapan Puluh ","Sembilan Puluh "]
+    ones = [
+        "", "Satu ","Dua ","Tiga ","Empat ", "Lima ","Enam ",
+        "Tujuh ","Delapan ","Sembilan "
+    ]
+    tens = [
+        "Sepuluh ","Sebelas ","Dua Belas ","Tiga Belas ",
+        "Empat Belas ","Lima Belas ","Enam Belas ",
+        "Tujuh Belas ","Delapan Belas ","Sembilan Belas "
+    ]
+    twenties = [
+        "","","Dua Puluh ","Tiga Puluh ","Empat Puluh ",
+        "Lima Puluh ","Enam Puluh ","Tujuh Puluh ",
+        "Delapan Puluh ","Sembilan Puluh "
+    ]
     thousands = ["","Ribu ","Juta ", "Milyar "]
 
     n3 = []
@@ -51,34 +61,29 @@ if currency > 0:
             result = twenties[b2] + ones[b1] + t + result
         if b3 > 0:
             result = ones[b3] + "Ratus " + result
-    
+
     result = result.replace("seJuta", "Satu Juta")
     result = result.replace("seMilyar", "Satu Milyar")
-    result = result.replace("Satu ratus", "Seratus")
-    result = result.replace("ratus", "Ratus")
+    result = result.replace("Satu Ratus", "Seratus")
 """
+
 
 class res_currency(models.Model):
     _inherit = 'res.currency'
 
-    python_amount2text = fields.Text(string='Amount To Text')
+    python_amount2text = fields.Text(
+        string='Amount To Text')
 
     @api.multi
-    def amount_to_text(self, currency):
+    def amount_to_text(self, value):
         val = {}
-
+        self.ensure_one()
         if self.python_amount2text:
-            localdict = {'currency':currency}
+            localdict = {'currency': value}
             eval(self.python_amount2text, localdict, mode='exec', nocopy=True)
             val = localdict['result']
 
         return val
-
-    @api.multi
-    def button_compute_python(self):
-        x =  self.amount_to_text(1550850)
-        raise except_orm(_('Compute Python'),
-            _("Result: '%s'!") % (x,))
 
     @api.model
     def _install_python_IDR(self):

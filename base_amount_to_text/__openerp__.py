@@ -7,13 +7,11 @@
     'version': '8.0.1.0.0',
     'summary': 'Add the capability of currency to have amount to text method',
     'author': 'OpenSynergy Indonesia,Odoo Community Association (OCA)',
-	'website': 'https://opensynergy-indonesia.com',
+    'website': 'https://opensynergy-indonesia.com',
     'category' : 'Base',
     'depends' : ['base'],
-    'data' : [
-        'data/res_currency_data.xml',
-        'view/res_currency_view.xml'
-    ],
+    'data' : ['view/res_currency_view.xml'],
+    'demo' : ['demo/res_currency_demo.xml'],
     'installable': True,
     'license': 'AGPL-3',
 }
