@@ -18,9 +18,14 @@
 						        </field>
 		                    </page>
 				            <page string="Amount To Text">
-                        		<separator string="Amount To Text" colspan="2"/>
+                        		<separator string="Python Definition for Method Amount To Text" colspan="2"/>
                         		<newline/>
-				                <field name="amount_to_text" nolabel="1"/>
+				                <field name="python_amount2text" nolabel="1"/>
+                                <div>
+                                    <button name="button_compute_python"
+                                        string="(Compute Python)"
+                                        type="object" help="Test Compute Python"/>
+                                </div>
 		                    </page>
 		                </notebook>
 					</field>
