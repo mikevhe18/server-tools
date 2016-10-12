@@ -27,5 +27,5 @@ class TestAmount2Text(TransactionCase):
         sen = currency.amount_to_text(sen)
 
         result_2 = rupiah + 'Rupiah' + ' Koma ' + sen + 'Sen'
-        self.assertEqual(result_2, 'Dua Juta Lima Ratus Ribu Tiga Ratus '\
+        self.assertEqual(result_2, 'Dua Juta Lima Ratus Ribu Tiga Ratus '
             'Lima Puluh Rupiah Koma Lima Puluh Delapan Sen')
