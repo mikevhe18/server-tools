@@ -68,7 +68,7 @@ if currency > 0:
 """
 
 
-class res_currency(models.Model):
+class ResCurrency(models.Model):
     _inherit = 'res.currency'
 
     python_amount2text = fields.Text(
