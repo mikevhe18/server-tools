@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="form_base_langAmntToText" model="ir.ui.view">
+            <field name="name">Amount To Text</field>
+            <field name="model">res.lang</field>
+            <field name="inherit_id" ref="base.res_lang_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="///group[3]" position="after">
+                        <label align="0.0" string="======================================================" />
+                        <group colspan="4" col="4" string="Legend for Method Amount To Text(variables)">
+                            <newline/>
+                            <label align="0.0" string="currency - Value of amount to be converted to text"/>
+                            <newline/>
+                            <label align="0.0" string="value - Returned value"/>
+                            <newline/>
+                            <label align="0.0" string="&lt;model res_lang&gt;.amount_to_text(value) - Function to call the method"/>
+                        </group>
+                        <separator string="Python Definition for Method Amount To Text" colspan="2"/>
+                        <field name="python_amount2text" nolabel="1"/>
+                    </xpath>>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -5,13 +5,12 @@
 {
     'name': 'Base Amount To Text',
     'version': '8.0.1.0.0',
-    'summary': 'Add the capability of currency to have amount to text method',
+    'summary': 'Add the capability of languanges to have amount to text method',
     'author': 'OpenSynergy Indonesia,Odoo Community Association (OCA)',
     'website': 'https://opensynergy-indonesia.com',
     'category': 'Base',
     'depends': ['base'],
-    'data': ['view/res_currency_view.xml'],
-    'demo': ['demo/res_currency_demo.xml'],
+    'data': ['view/res_lang_view.xml'],
     'installable': True,
     'license': 'AGPL-3',
 }
