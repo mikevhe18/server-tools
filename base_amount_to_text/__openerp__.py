@@ -10,7 +10,7 @@
     'website': 'https://opensynergy-indonesia.com',
     'category': 'Base',
     'depends': ['base'],
-    'data': ['view/res_lang_view.xml'],
+    'data': ['views/res_lang_view.xml'],
     'installable': True,
     'license': 'AGPL-3',
 }

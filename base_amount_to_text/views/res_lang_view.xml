@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="form_base_langAmntToText" model="ir.ui.view">
+        <record id="res_lang_view_form" model="ir.ui.view">
             <field name="name">Amount To Text</field>
             <field name="model">res.lang</field>
             <field name="inherit_id" ref="base.res_lang_form"/>
