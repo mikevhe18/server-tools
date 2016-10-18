@@ -7,7 +7,7 @@ Base Amount To Text
 ===================
 
 This module allows defining method "amount to text" as python code.
-The method can be registered for each languanges.
+The method can be registered for each languanges or currencies.
 
 Installation
 ============
@@ -25,16 +25,30 @@ Usage
 =====
 To use this module, you need to:
 
-1. Go to menu *Setting -> Translations -> Languanges*
+1. Go to menu *Setting -> Translations -> Languanges* or
+   Go to menu *Accounting -> Miscellaneous -> Currencies*
 2. Edit or create one.
-3. There will be a new field named *Python Definition for Method Amount To Text*
-4. Fill this field with a python code
-5. To call the method use <model:res_lang>.amount_to_text(value)
+3. There will be a new field named *Amount To Text*
+4. Click add an item
+5. There will be a new field named *Python Definition for Method Amount To Text*
+6. Fill this field with a python code
+7. To call the method use <model:base.amount_to_text>.amount_to_text(value)
    Example: account_invoice
+   
+   obj_base_amount2text = self.env['base.amount_to_text']
+   obj_res_currency = self.env['res.currency']
    obj_res_lang = self.env['res.lang']
+
    lang = self.obj_res_lang.search(
       [('code', '=', 'en_US')])
-   result = lang.amount_to_text(self.amount_total)
+   curr = self.obj_res_currency.search(
+      [('name', '=', 'IDR')])
+   amount2text = self.obj_amount2text.search([
+         ('currency_id', '=', curr.id),
+         ('lang_id', '=', lang.id)
+   ])
+
+   result = amount2text.amount_to_text(self.amount_total)
 
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas

@@ -4,7 +4,10 @@
 
 from openerp.tests.common import TransactionCase
 
-PYTHON_IDR = """result=''
+PYTHON_INDONESIA = """result=''
+result_sen = ''
+result_rupiah = ''
+
 if value > 0:
     ones = [
         "", "Satu ","Dua ","Tiga ","Empat ", "Lima ","Enam ",
@@ -26,44 +29,60 @@ if value > 0:
     r1 = ""
 
     ns = str(value)
+    rupiah, sen = str(ns).split(".")
 
-    for k in range(3, 33, 3):
-        r = ns[-k:]
-        q = len(ns) - k
-        if q < -2:
-            break
-        else:
-            if q >= 0:
-                n3.append(int(r[:3]))
-            elif q >= -1:
-                n3.append(int(r[:2]))
-            elif q >= -2:
-                n3.append(int(r[:1]))
-        r1 = r
-
-    for i, x in enumerate(n3):
-        b1 = x % 10
-        b2 = (x % 100)//10
-        b3 = (x % 1000)//100
-        if x == 0:
-            continue
-        else:
-            t = thousands[i]
-        if b2 == 0:
-            if b1 == 1:
-                result = 'se' + t + result
+    if int(rupiah) > 0:
+        for k in range(3, 33, 3):
+            r = rupiah[-k:]
+            q = len(rupiah) - k
+            if q < -2:
+                break
             else:
-                result = ones[b1] + t + result
-        elif b2 == 1:
-            result = tens[b1] + t + result
-        elif b2 > 1:
-            result = twenties[b2] + ones[b1] + t + result
-        if b3 > 0:
-            result = ones[b3] + "Ratus " + result
+                if q >= 0:
+                    n3.append(int(r[:3]))
+                elif q >= -1:
+                    n3.append(int(r[:2]))
+                elif q >= -2:
+                    n3.append(int(r[:1]))
+            r1 = r
 
-    result = result.replace("seJuta", "Satu Juta")
-    result = result.replace("seMilyar", "Satu Milyar")
-    result = result.replace("Satu Ratus", "Seratus")
+        for i, x in enumerate(n3):
+            b1 = x % 10
+            b2 = (x % 100)//10
+            b3 = (x % 1000)//100
+            if x == 0:
+                continue
+            else:
+                t = thousands[i]
+            if b2 == 0:
+                if b1 == 1:
+                    result_rupiah = 'se' + t + result_rupiah
+                else:
+                    result_rupiah = ones[b1] + t + result_rupiah
+            elif b2 == 1:
+                result_rupiah = tens[b1] + t + result_rupiah
+            elif b2 > 1:
+                result_rupiah = twenties[b2] + ones[b1] + t + result_rupiah
+            if b3 > 0:
+                result_rupiah = ones[b3] + "Ratus " + result_rupiah
+    
+        result_rupiah = result_rupiah.replace("seJuta", "Satu Juta")
+        result_rupiah = result_rupiah.replace("seMilyar", "Satu Milyar")
+        result_rupiah = result_rupiah.replace("Satu ratus", "Seratus")
+        result_rupiah = result_rupiah.replace("ratus", "Ratus")
+        result_rupiah = result_rupiah + "Rupiah"
+
+        if int(sen) > 0:
+            y = len(sen)
+            for k in range(0,y):
+                r = sen[k]
+                if y == 1:
+                    result_sen = ones[int(r)]
+                elif y > 1:
+                    result_sen = result_sen + ones[int(r)]
+            result_sen = " Koma " + result_sen + "Sen"
+
+    result = result_rupiah + result_sen
 """
 
 
@@ -71,6 +90,9 @@ class TestAmount2Text(TransactionCase):
     def setUp(self, *args, **kwargs):
         result = super(TestAmount2Text, self).setUp(*args, **kwargs)
         self.obj_res_lang = self.env['res.lang']
+        self.obj_amount2text = self.env['base.amount_to_text']
+
+        self.IDR = self.env.ref('base.IDR')
 
         return result
 
@@ -79,7 +101,11 @@ class TestAmount2Text(TransactionCase):
             'code': 'id_IDR',
             'name': 'Indonesia',
             'translatable': 'translatable',
-            'python_amount2text': PYTHON_IDR,
+            'amount_to_text_ids': [
+                (0, 0, {'currency_id': self.IDR.id,
+                        'python_amount2text': PYTHON_INDONESIA})
+            ],
+            
         }
         return data
 
@@ -93,20 +119,21 @@ class TestAmount2Text(TransactionCase):
         self.assertIsNotNone(lang)
 
         # Variables
-        value_1 = 1000000
+        value_1 = 1000000.00
         value_2 = 2500350.58
 
+        amount2text = self.obj_amount2text.search([
+            ('currency_id', '=', self.IDR.id),
+            ('lang_id', '=', lang.id)
+        ])
+
         # Check Method Amount To Text Using Variable 1
-        result_1 = lang.amount_to_text(value_1) + 'Rupiah'
+        result_1 = amount2text.amount_to_text(value_1)
         self.assertEqual(result_1, 'Satu Juta Rupiah')
 
         # Check Method Amount To Text Using Variable 2
-        rupiah, sen = str(value_2).split(".")
-        rupiah = lang.amount_to_text(rupiah)
-        sen = lang.amount_to_text(sen)
-
-        result_2 = rupiah + 'Rupiah' + ' Koma ' + sen + 'Sen'
+        result_2 = amount2text.amount_to_text(value_2)
         self.assertEqual(
             result_2,
             'Dua Juta Lima Ratus Ribu Tiga Ratus '
-            'Lima Puluh Rupiah Koma Lima Puluh Delapan Sen')
+            'Lima Puluh Rupiah Koma Lima Delapan Sen')

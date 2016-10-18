@@ -6,11 +6,11 @@ from openerp import fields, models, api
 from openerp.tools.safe_eval import safe_eval as eval
 
 
-class ResLang(models.Model):
-    _inherit = 'res.lang'
+class ResCurrency(models.Model):
+    _inherit = 'res.currency'
 
     amount_to_text_ids = fields.One2many(
         comodel_name='base.amount_to_text',
-        inverse_name='lang_id',
+        inverse_name='currency_id',
         string='Amount To Text'
     )

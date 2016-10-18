@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="res_lang_view_form" model="ir.ui.view">
-            <field name="name">Languange - Amount To Text</field>
-            <field name="model">res.lang</field>
-            <field name="inherit_id" ref="base.res_lang_form"/>
+        <record id="res_currency_view_form" model="ir.ui.view">
+            <field name="name">Currency - Amount To Text</field>
+            <field name="model">res.currency</field>
+            <field name="inherit_id" ref="base.view_currency_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="///group[3]" position="after">
+                    <xpath expr="//field[@name='rate_ids']" position="after">+
                         <group colspan="4" col="4" string="Amount To Text">
                             <field name="amount_to_text_ids" nolabel="1">
                                 <tree>
-                                    <field name="currency_id"/>
+                                    <field name="lang_id"/>
                                 </tree>
                                 <form>
                                     <group>
-                                        <field name="currency_id"/>
+                                        <field name="lang_id"/>
                                     </group>
                                     <group colspan="4" col="4" string="Legend for Method Amount To Text(variables)">
                                         <newline/>
