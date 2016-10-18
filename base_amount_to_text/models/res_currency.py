@@ -2,8 +2,7 @@
 # © 2016 OpenSynergy Indonesia
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from openerp import fields, models, api
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp import fields, models
 
 
 class ResCurrency(models.Model):

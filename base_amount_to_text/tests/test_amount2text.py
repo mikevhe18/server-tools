@@ -65,7 +65,7 @@ if value > 0:
                 result_rupiah = twenties[b2] + ones[b1] + t + result_rupiah
             if b3 > 0:
                 result_rupiah = ones[b3] + "Ratus " + result_rupiah
-    
+
         result_rupiah = result_rupiah.replace("seJuta", "Satu Juta")
         result_rupiah = result_rupiah.replace("seMilyar", "Satu Milyar")
         result_rupiah = result_rupiah.replace("Satu ratus", "Seratus")
@@ -189,7 +189,7 @@ class TestAmount2Text(TransactionCase):
                 (0, 0, {'currency_id': self.IDR.id,
                         'python_amount2text': PYTHON_INDONESIA})
             ],
-            
+
         }
         return data
 
@@ -234,8 +234,7 @@ class TestAmount2Text(TransactionCase):
     def test_amount_to_text_eng(self):
         # Update Currency
         data_currency = self._prepare_currency_IDR()
-        curr = self.IDR.\
-            write(data_currency)
+        self.IDR.write(data_currency)
 
         amount2text = self.obj_amount2text.search([
             ('currency_id', '=', self.IDR.id),
